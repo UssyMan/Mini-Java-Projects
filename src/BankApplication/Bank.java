@@ -1,68 +1,8 @@
+package BankApplication;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
-record Transactions(String type, double amount){
-
-}
-class Customer{
-    private final String name;
-    private final ArrayList<Transactions> transactions;
-    private double initialDeposit;
-    private double balance= 0.00;
-
-    public Customer(String name, ArrayList<Transactions> transactions) {
-        this.name = name;
-        this.transactions = transactions;
-    }
-
-    public Customer(String name, double initialDeposit) {
-        this(name.toUpperCase(), new ArrayList<>(500));
-        this.initialDeposit= initialDeposit;
-        transactions.add(new Transactions("Default",initialDeposit));
-    }
-    public Customer(String name){
-        this(name,0.00);
-    }
-    public String getName() {
-        return name;
-    }
-
-    public void addTransaction(String type,double amount){
-        transactions.add(new Transactions(type,amount));
-    }
-    public double getBalance(){
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    public void getTransactions(){
-        for(Transactions transactions1: transactions){
-            //remove if condition after implementing initial deposit as default
-            //implement above zero withdrawal
-            if (!transactions1.type().equals("Default")){
-                System.out.printf("%s: \t |\t \t %.2f %n",transactions1.type(), (float)transactions1.amount());
-            }
-        }
-    }
-    public double getTotalDeposit(){
-        double balance= 0;
-        for(Transactions transactions1: transactions){
-            if (transactions1.type().equals("Credit")){
-                balance+= transactions1.amount();
-            }
-        }
-        return balance;
-    }
-
-    @Override
-    public String toString() {
-        return "Customer Name:" + name + " Balance: " + (float)balance + "\n";
-    }
-}
 class Bank{
     private static final Scanner scanner= new Scanner(System.in);
     private final String name;
@@ -97,7 +37,7 @@ class Bank{
         System.out.println("");
     }
     public void addCustomer(Customer customer){
-        System.out.print("Enter Name of Customer To add: ");
+        System.out.print("Enter Name of BankApplication.Customer To add: ");
         String name= scanner.nextLine();
         customer= new Customer(name);
         if (currentCustomer(name)==null){
@@ -105,22 +45,22 @@ class Bank{
             System.out.printf("%s has been added Successfully %n", name);
         }
         else{
-            System.out.println("Customer Already Exists");
+            System.out.println("BankApplication.Customer Already Exists");
         }
         loadingAnimation(3);
         BankApp.menu();
     }
     public void deleteCustomer(){
         Bank.printAllCustomers();
-        System.out.println("Enter Name of Customer To delete");
+        System.out.println("Enter Name of BankApplication.Customer To delete");
         String name= scanner.nextLine();
         if (currentCustomer(name)!=null){
             customers.remove(currentCustomer(name));
             System.out.printf("%s has been removed Successfully %n", name);
         }
         else{
-            System.out.println("Customer doesn't Exist");
-            System.out.println("Enter a valid Customer name");
+            System.out.println("BankApplication.Customer doesn't Exist");
+            System.out.println("Enter a valid BankApplication.Customer name");
             deleteCustomer();
         }
         loadingAnimation(3);
@@ -217,79 +157,8 @@ class Bank{
     public static void printAllCustomers(){
         System.out.println("*".repeat(50));
         for (Customer customer: customers){
-            System.out.printf("Customer Name: %s Account Balance: %.2f %n",customer.getName(),(float)customer.getBalance());
+            System.out.printf("BankApplication.Customer Name: %s Account Balance: %.2f %n",customer.getName(),(float)customer.getBalance());
         }
         System.out.println("*".repeat(50));
     }
-}
-public class BankApp {
-    private static Scanner scanner= new Scanner(System.in);
-    private static Bank bank= new Bank("FCMB");
-    private static Customer blankCustomer= new Customer("");
-    public static void main(String[] args) {
-        Customer customer= new Customer("Usman");
-        Customer customer1= new Customer("Mahadi");
-        Bank.customers.add(customer);
-        Bank.customers.add(customer1);
-
-        menu();
-
-    }
-    public static void menu(){
-        System.out.println("Please select a Task to do.....");
-        System.out.println("1 -> Add customer");
-        System.out.println("2 -> Delete customer");
-        System.out.println("3 -> View all Customers");
-        System.out.println("4 -> Quit App");
-        int userChoice = Integer.parseInt(scanner.nextLine());
-        switch (userChoice){
-            case 1 -> bank.addCustomer(blankCustomer);
-            case 2 -> bank.deleteCustomer();
-            case 3 -> viewCustomers();
-            //default -> flag= false;
-        }
-
-    }
-    public static void customerMenu(Customer customer){
-        System.out.printf("Please Enter Transaction to perform in %s's account %n",customer.getName());
-        System.out.println("1 -> Deposit");
-        System.out.println("2 -> Check Balance");
-        System.out.println("3 -> Withdraw");
-        System.out.println("4 -> Print Bank Statement");
-        System.out.println("5 -> Back to Menu");
-        System.out.println("6 -> Delete Customer");
-        System.out.println("7 -> Quit app");
-        int userChoice= Integer.parseInt(scanner.nextLine());
-        switch (userChoice){
-            case 1 -> Bank.deposit(customer);
-            case 2 -> Bank.accountBalance(customer);
-            case 3 -> Bank.withdraw(customer);
-            case 4 -> Bank.printStatement(customer);
-            case 5 -> menu();
-            case 6 -> Bank.deleteCurrentCustomer(customer);
-            //default -> flag= false;
-        }
-
-    }
-    private static void viewCustomers(){
-//        System.out.println(Bank.customers.toString());
-        Bank.printAllCustomers();
-        System.out.print("Type customer name to work on or Enter 1 to go back to menu: ");
-        String userInput= scanner.nextLine();
-        try {
-            if (Integer.parseInt(userInput)==1){
-                menu();
-            }
-        } catch (NumberFormatException e) {
-            if (Bank.currentCustomer(userInput) != null){
-                customerMenu(Bank.currentCustomer(userInput));
-            }
-            else{
-                System.out.println("Customer not in Bank......Please Enter a valid customer's name");
-                System.out.println("Below is the List of Customers");
-                viewCustomers();
-            }
-        }
-    }
-
 }
