@@ -50,6 +50,7 @@ public class BankApp {
             case 4 -> Bank.printStatement(customer);
             case 5 -> menu();
             case 6 -> Bank.deleteCurrentCustomer(customer);
+            case 7 -> System.exit(0);
             //default -> flag= false;
         }
 
